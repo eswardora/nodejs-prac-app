@@ -2,39 +2,43 @@ import bcrypt from 'bcrypt';
 import { User } from '../models/user.js';
 
 
-export const userRegister = async (req,res)=>{
-  try{
+export const userRegister = async (req, res) => {
+  try {
 
-    try{
-      var isExists = User.findOne({email});
-    }catch(err){
-      if(err.message.includes("Cannot access 'email' before initialization")){}
-    }
-    
-    if(isExists){
-      res.status(400).json({
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const { name, email, mobile } = req.body;
+    const isExists = await User.findOne({ email });
+    if (isExists) {
+      return res.status(400).json({
         success: 'false',
         message: 'User email exists already'
       })
+
     }
-
-    const hashedPassword = await bcrypt.hash(req.body.password,10);
-    const { name, email, mobile } = req.body;
-
-    const user = User.create({ name, email, mobile, password: hashedPassword,
-      image: '/images/'+req.file.filename
-    });
+    const reqUser = {
+      name: name.trim(), email, mobile, password: hashedPassword,
+      image: (() => {
+        if (req.file) {
+          return `'/images/'+${req.file.filename}`
+        }
+        else {
+          return null;
+        }
+      })()
+    };
+    const user = await User.create(reqUser);
 
 
     res.status(201).json({
-      success:true,
+      success: true,
       message: 'User Successfully Registered',
       user
     });
 
 
-  }catch(err){
-
+  } catch (err) {
+    console.log(err.message);
     res.status(400).json({
       success: false,
       message: err.message

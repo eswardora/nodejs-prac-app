@@ -5,7 +5,7 @@ import employeeRouter from "./routes/employee.js";
 import { userRouter } from "./routes/user.js";
 dotenv.config();
 const app = express();
-const PORT = 3000;
+const PORT = 7000;
 const uri = process.env.MONGO_URI;
 
 connectMongoDB(uri);

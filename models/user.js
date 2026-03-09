@@ -8,6 +8,7 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       required: true,
+      default: null // if it is not null, when the first user registering and mongoose finding for existing mails as validation, then receives as there is no email initialized but we are looking for it.
     },
     mobile: String,
     password: {
