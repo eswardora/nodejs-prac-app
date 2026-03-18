@@ -1,0 +1,20 @@
+<table>
+    <thead>
+    <tr>
+    <th>EmpId</th>
+    <th>EmpName</th>
+    <th>EmpEmail</th>
+    <th>EmpGender</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% for(let emp of locals){ %>
+        <tr>
+            <td><%= emp.id %></td>
+            <td><%= emp.first_name %></td>
+            <td><%= emp.email %></td>
+            <td><%= emp.gender %></td>
+        </tr>
+    <% } %>
+    </tbody>
+</table>

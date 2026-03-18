@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
-import { userRegister } from '../controllers/user.js';
-import { validateRegister } from '../middlewares/validateRegister.js';
+import { userRegister, emailVerify } from '../controllers/user.js';
+import { validateRegister } from '../middlewares/validator.js';
 export const userRouter = express.Router();
 
 const storage = multer.diskStorage({
@@ -24,7 +24,7 @@ const upload = multer({storage, fileFilter});
 userRouter.post('/register',upload.single('image'),validateRegister, userRegister);
 // db operations and validations has to be done even before image uploading using multer then we can
 // store image filenames with user IDs
-
+userRouter.get('/email-verification', emailVerify);
 userRouter.use((err, req, res, next) => {
   // Multer-specific errors have name === 'MulterError'
   if (err instanceof multer.MulterError) {

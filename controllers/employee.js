@@ -3,7 +3,7 @@ import { Employee } from '../models/employee.js';
 async function getEmployees(req, res) {
   try {
         const employees = await Employee.find();
-        res.json(employees);
+        res.render('./views/output.html');
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
