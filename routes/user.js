@@ -1,7 +1,8 @@
 import express from 'express';
 import multer from 'multer';
-import { userRegister, emailVerify } from '../controllers/user.js';
+import { userRegister, emailVerify, deleteUser, forgotPassword, login, protectedPath } from '../controllers/user.js';
 import { validateRegister } from '../middlewares/validator.js';
+import { userVerify } from '../middlewares/auth.js';
 export const userRouter = express.Router();
 
 const storage = multer.diskStorage({
@@ -22,9 +23,13 @@ const fileFilter = (req, file, cb) => {
 };
 const upload = multer({storage, fileFilter});
 userRouter.post('/register',upload.single('image'),validateRegister, userRegister);
-// db operations and validations has to be done even before image uploading using multer then we can
-// store image filenames with user IDs
+userRouter.post('/delete', deleteUser);
+userRouter.get('/protected', userVerify, protectedPath);
 userRouter.get('/email-verification', emailVerify);
+userRouter.get('/forgot-password', forgotPassword);
+userRouter.post('/login', login);
+
+//Error Handling
 userRouter.use((err, req, res, next) => {
   // Multer-specific errors have name === 'MulterError'
   if (err instanceof multer.MulterError) {
@@ -35,5 +40,5 @@ userRouter.use((err, req, res, next) => {
   /* if (err?.code === 'INVALID_FILE_TYPE') {
     return res.status(400).json({ success: false, error: err.message });
   } */
-  return res.status(500).json({message: err.message});
+  return res.status(500).json({message: err.message, erro : err.stack});
 })

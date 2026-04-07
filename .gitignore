@@ -2,3 +2,4 @@ node_modules/
 .env
 test.http
 public/html/
+helpers/app.log

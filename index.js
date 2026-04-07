@@ -3,13 +3,13 @@ import dotenv from "dotenv";
 import ejs from 'ejs';
 import path from 'path';
 import {fileURLToPath} from 'url';
-
+import log from "./helpers/logger.js";
 import { connectMongoDB } from "./connection.js";
 import employeeRouter from "./routes/employee.js";
 import { userRouter } from "./routes/user.js";
 dotenv.config();
 const app = express();
-const PORT = 7000;
+const PORT = process.env.PORT;
 const uri = process.env.MONGO_URI;
 
 connectMongoDB(uri);
@@ -31,4 +31,5 @@ app.use("/users",userRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+    log("Server is started");
 });
